@@ -8,7 +8,7 @@ type ServiceStatus string
 
 const (
 	// ServiceStatusOK service is OK
-	ServiceStatusOK  ServiceStatus = "UP"
+	ServiceStatusOK ServiceStatus = "UP"
 	// ServiceStatusNOK service is not OK
 	ServiceStatusNOK ServiceStatus = "DOWN"
 )
@@ -27,9 +27,9 @@ HealthStatus is the healthcheck status
 aggregate all service status
 */
 type HealthStatus struct {
-	Status    ServiceStatus
-	Info      map[string]string
-	Services  []Status
+	Status   ServiceStatus
+	Info     map[string]string
+	Services []Status
 }
 
 /*

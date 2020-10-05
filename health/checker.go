@@ -52,6 +52,7 @@ Type returns the test/service type (ServiceTypeTCP)
 func (cfg *TCPServiceConfig) Type() ServiceType {
 	return ServiceTypeTCP
 }
+
 /*
 Endpoint returns the test/service endpoint
 */

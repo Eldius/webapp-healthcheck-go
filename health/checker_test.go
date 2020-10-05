@@ -104,7 +104,7 @@ func TestTcpTestTargetInvalido(t *testing.T) {
 	}
 }
 
-func TestCheckerEndpoint(t *testing.T)  {
+func TestCheckerEndpoint(t *testing.T) {
 	service0 := startservice(7777, t)
 	defer service0.Close()
 
@@ -112,19 +112,19 @@ func TestCheckerEndpoint(t *testing.T)  {
 	defer service1.Close()
 
 	h := BuildChecker([]ServiceConfig{
-			&TCPServiceConfig{
-				endpoint: "http://localhost:7777",
-				name: "test-server0",
-				timeout: defaultDuration,
-			},
-			&TCPServiceConfig{
-				endpoint: "http://localhost:8888",
-				name: "test-server1",
-				timeout: defaultDuration,
-			},
+		&TCPServiceConfig{
+			endpoint: "http://localhost:7777",
+			name:     "test-server0",
+			timeout:  defaultDuration,
 		},
+		&TCPServiceConfig{
+			endpoint: "http://localhost:8888",
+			name:     "test-server1",
+			timeout:  defaultDuration,
+		},
+	},
 		map[string]string{
-			"version": "0.1.2",
+			"version":   "0.1.2",
 			"buildDate": "2020-10-04 23:21:00Z",
 		},
 	)
@@ -160,27 +160,24 @@ func TestCheckerEndpoint(t *testing.T)  {
 	}
 }
 
-
-
-
-func TestCheckerEndpointFail(t *testing.T)  {
+func TestCheckerEndpointFail(t *testing.T) {
 	service0 := startservice(7777, t)
 	defer service0.Close()
 
 	h := BuildChecker([]ServiceConfig{
-			&TCPServiceConfig{
-				endpoint: "http://localhost:7777",
-				name: "test-server0",
-				timeout: defaultDuration,
-			},
-			&TCPServiceConfig{
-				endpoint: "http://localhost:8888",
-				name: "test-server1",
-				timeout: defaultDuration,
-			},
+		&TCPServiceConfig{
+			endpoint: "http://localhost:7777",
+			name:     "test-server0",
+			timeout:  defaultDuration,
 		},
+		&TCPServiceConfig{
+			endpoint: "http://localhost:8888",
+			name:     "test-server1",
+			timeout:  defaultDuration,
+		},
+	},
 		map[string]string{
-			"version": "0.1.2",
+			"version":   "0.1.2",
 			"buildDate": "2020-10-04 23:21:00Z",
 		},
 	)
