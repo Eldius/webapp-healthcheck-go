@@ -1,6 +1,7 @@
 package health
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -9,13 +10,18 @@ import (
 	"time"
 )
 
+//ServiceType service type definition
 type ServiceType int
 
 const (
+	// ServiceTypeTCP is the TCP type checker
 	ServiceTypeTCP ServiceType = iota
 	//ServiceTypeHTTP ServiceType = iota
 )
 
+/*
+ServiceConfig defines the checker interface
+*/
 type ServiceConfig interface {
 	Name() string
 	Type() ServiceType
@@ -24,25 +30,44 @@ type ServiceConfig interface {
 	Test() Status
 }
 
+/*
+TCPServiceConfig is the checker config type for TCP checks
+*/
 type TCPServiceConfig struct {
 	name     string
 	endpoint string
 	timeout  time.Duration
 }
 
+/*
+Name returns the test/service name
+*/
 func (cfg *TCPServiceConfig) Name() string {
 	return cfg.name
 }
+/*
+Type returns the test/service type (ServiceTypeTCP)
+*/
 func (cfg *TCPServiceConfig) Type() ServiceType {
 	return ServiceTypeTCP
 }
+/*
+Endpoint returns the test/service endpoint
+*/
 func (cfg *TCPServiceConfig) Endpoint() string {
 	return cfg.endpoint
 }
+
+/*
+Timeout returns the test/service TCP test timeout
+*/
 func (cfg *TCPServiceConfig) Timeout() time.Duration {
 	return cfg.timeout
 }
 
+/*
+Test returns the test/service status
+*/
 func (cfg *TCPServiceConfig) Test() Status {
 	if url, err := parseHost(cfg.Endpoint()); err != nil {
 		return Status{
@@ -97,16 +122,25 @@ func parseHost(target string) (host string, err error) {
 	return
 }
 
-func BuildChecker(cfgList []ServiceConfig) http.HandlerFunc {
-	return func(w ResponseWriter, r *Request) {
-		
+/*
+BuildChecker build the Checker responder
+*/
+func BuildChecker(cfgList []ServiceConfig, info map[string]string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		h := checkHealth(cfgList, info)
+		if h.Status() == ServiceStatusOK {
+			w.WriteHeader(200)
+		} else {
+			w.WriteHeader(502)
+		}
+
+		_ = json.NewEncoder(w).Encode(h)
 	}
 }
 
-func checkHealth(cfgList []ServiceConfig) HealthStatus {
+func checkHealth(cfgList []ServiceConfig, info map[string]string) HealthStatus {
 	h := HealthStatus{
-		BuildDate: "",
-		Version:   "",
+		Info: info,
 	}
 
 	for _, c := range cfgList {
