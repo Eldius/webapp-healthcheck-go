@@ -38,7 +38,7 @@ func TestDBCheckerTimeout(t *testing.T) {
 
 	db := prepareDB(dir, t)
 	defer db.Close()
-	chk := NewDBChecker("main-db", db, time.Duration(1 * time.Nanosecond))
+	chk := NewDBCheckerCustomQuery("main-db", db, time.Duration(1 * time.Nanosecond), "SELECT SLEEP(100)")
 
 	s := chk.Test()
 	t.Log(s)
