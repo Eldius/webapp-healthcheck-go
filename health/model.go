@@ -27,18 +27,19 @@ HealthStatus is the healthcheck status
 aggregate all service status
 */
 type HealthStatus struct {
-	Info map[string]string
-	Statuses  []Status
+	Status    ServiceStatus
+	Info      map[string]string
+	Services  []Status
 }
 
 /*
-Status checks if all services are ok
+Evaluate checks all services status and set health status
 */
-func (hs *HealthStatus) Status() ServiceStatus {
-	for _, s := range hs.Statuses {
+func (hs *HealthStatus) Evaluate() {
+	hs.Status = ServiceStatusOK
+	for _, s := range hs.Services {
 		if s.Status != ServiceStatusOK {
-			return ServiceStatusNOK
+			hs.Status = ServiceStatusNOK
 		}
 	}
-	return ServiceStatusOK
 }

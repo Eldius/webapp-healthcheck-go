@@ -45,6 +45,7 @@ Name returns the test/service name
 func (cfg *TCPServiceConfig) Name() string {
 	return cfg.name
 }
+
 /*
 Type returns the test/service type (ServiceTypeTCP)
 */
@@ -69,7 +70,8 @@ func (cfg *TCPServiceConfig) Timeout() time.Duration {
 Test returns the test/service status
 */
 func (cfg *TCPServiceConfig) Test() Status {
-	if url, err := parseHost(cfg.Endpoint()); err != nil {
+	url, err := parseHost(cfg.Endpoint())
+	if err != nil {
 		return Status{
 			Name:   "cartao-adesao",
 			Status: ServiceStatusNOK,
@@ -77,31 +79,32 @@ func (cfg *TCPServiceConfig) Test() Status {
 				"error": err.Error(),
 			},
 		}
-	} else {
-		start := time.Now()
-		conn, err := net.DialTimeout("tcp", url, cfg.Timeout())
-		if err != nil {
-			log.Println("Something wrong: ", err)
-			return Status{
-				Name:   cfg.Name(),
-				Status: ServiceStatusNOK,
-				Details: map[string]string{
-					"cause": err.Error(),
-				},
-			}
-		}
-		defer func() {
-			conn.Close()
-			log.Println("Connection closed")
-		}()
+	}
+
+	start := time.Now()
+	conn, err := net.DialTimeout("tcp", url, cfg.Timeout())
+	if err != nil {
+		log.Println("Something wrong: ", err)
 		return Status{
 			Name:   cfg.Name(),
-			Status: ServiceStatusOK,
+			Status: ServiceStatusNOK,
 			Details: map[string]string{
-				"time": time.Since(start).String(),
+				"cause": err.Error(),
 			},
 		}
 	}
+	defer func() {
+		conn.Close()
+		log.Println("Connection closed")
+	}()
+	return Status{
+		Name:   cfg.Name(),
+		Status: ServiceStatusOK,
+		Details: map[string]string{
+			"time": time.Since(start).String(),
+		},
+	}
+
 }
 
 func parseHost(target string) (host string, err error) {
@@ -128,7 +131,7 @@ BuildChecker build the Checker responder
 func BuildChecker(cfgList []ServiceConfig, info map[string]string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		h := checkHealth(cfgList, info)
-		if h.Status() == ServiceStatusOK {
+		if h.Status == ServiceStatusOK {
 			w.WriteHeader(200)
 		} else {
 			w.WriteHeader(502)
@@ -144,8 +147,10 @@ func checkHealth(cfgList []ServiceConfig, info map[string]string) HealthStatus {
 	}
 
 	for _, c := range cfgList {
-		h.Statuses = append(h.Statuses, c.Test())
+		h.Services = append(h.Services, c.Test())
 	}
+
+	h.Evaluate()
 
 	return h
 }

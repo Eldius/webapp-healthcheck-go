@@ -4,7 +4,7 @@ import "testing"
 
 func TestHealthStatusOK(t *testing.T) {
 	h := HealthStatus{
-		Statuses: []Status{
+		Services: []Status{
 			{
 				Name:   "service01",
 				Status: ServiceStatusOK,
@@ -20,14 +20,16 @@ func TestHealthStatusOK(t *testing.T) {
 		},
 	}
 
-	if h.Status() != "UP" {
-		t.Errorf("h.Status() should return 'UP', but returned '%s'", h.Status())
+	h.Evaluate()
+
+	if h.Status != "UP" {
+		t.Errorf("h.Status should return 'UP', but returned '%s'", h.Status)
 	}
 }
 
 func TestHealthStatusNOK0(t *testing.T) {
 	h := HealthStatus{
-		Statuses: []Status{
+		Services: []Status{
 			{
 				Name:   "service01",
 				Status: ServiceStatusNOK,
@@ -43,14 +45,16 @@ func TestHealthStatusNOK0(t *testing.T) {
 		},
 	}
 
-	if h.Status() != "DOWN" {
-		t.Errorf("h.Status() should return 'DOWN', but returned '%s'", h.Status())
+	h.Evaluate()
+
+	if h.Status != "DOWN" {
+		t.Errorf("h.Status should return 'DOWN', but returned '%s'", h.Status)
 	}
 }
 
 func TestHealthStatusNOK1(t *testing.T) {
 	h := HealthStatus{
-		Statuses: []Status{
+		Services: []Status{
 			{
 				Name:   "service01",
 				Status: ServiceStatusOK,
@@ -66,14 +70,16 @@ func TestHealthStatusNOK1(t *testing.T) {
 		},
 	}
 
-	if h.Status() != "DOWN" {
-		t.Errorf("h.Status() should return 'DOWN', but returned '%s'", h.Status())
+	h.Evaluate()
+
+	if h.Status != "DOWN" {
+		t.Errorf("h.Status should return 'DOWN', but returned '%s'", h.Status)
 	}
 }
 
 func TestHealthStatusNOK2(t *testing.T) {
 	h := HealthStatus{
-		Statuses: []Status{
+		Services: []Status{
 			{
 				Name:   "service01",
 				Status: ServiceStatusOK,
@@ -89,14 +95,16 @@ func TestHealthStatusNOK2(t *testing.T) {
 		},
 	}
 
-	if h.Status() != "DOWN" {
-		t.Errorf("h.Status() should return 'DOWN', but returned '%s'", h.Status())
+	h.Evaluate()
+
+	if h.Status != "DOWN" {
+		t.Errorf("h.Status should return 'DOWN', but returned '%s'", h.Status)
 	}
 }
 
 func TestHealthStatusNOK3(t *testing.T) {
 	h := HealthStatus{
-		Statuses: []Status{
+		Services: []Status{
 			{
 				Name:   "service01",
 				Status: ServiceStatusNOK,
@@ -112,7 +120,9 @@ func TestHealthStatusNOK3(t *testing.T) {
 		},
 	}
 
-	if h.Status() != "DOWN" {
-		t.Errorf("h.Status() should return 'DOWN', but returned '%s'", h.Status())
+	h.Evaluate()
+
+	if h.Status != "DOWN" {
+		t.Errorf("h.Status should return 'DOWN', but returned '%s'", h.Status)
 	}
 }
