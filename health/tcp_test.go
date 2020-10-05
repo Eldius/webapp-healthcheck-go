@@ -49,11 +49,11 @@ func TestParseHostTargetInvalido(t *testing.T) {
 func TestTcpTestOK(t *testing.T) {
 	service := startservice(9999, t)
 	defer service.Close()
-	cfg := TCPServiceConfig{
-		name:     "success-test",
-		endpoint: "http://localhost:9999",
-		timeout:  defaultDuration,
-	}
+	cfg := NewTCPChecker(
+		"success-test",
+		"http://localhost:9999",
+		defaultDuration,
+	)
 
 	s := cfg.Test()
 
@@ -64,11 +64,11 @@ func TestTcpTestOK(t *testing.T) {
 }
 
 func TestTcpTestHostUnavailable(t *testing.T) {
-	cfg := TCPServiceConfig{
-		name:     "invalid-test",
-		endpoint: "http://abc.xyz:1234",
-		timeout:  defaultDuration,
-	}
+	cfg := NewTCPChecker(
+		"invalid-test",
+		"http://abc.xyz:1234",
+		defaultDuration,
+	)
 
 	s := cfg.Test()
 	if s.Status != ServiceStatusNOK {
@@ -77,11 +77,11 @@ func TestTcpTestHostUnavailable(t *testing.T) {
 }
 
 func TestTcpTestTargetInvalido(t *testing.T) {
-	cfg := TCPServiceConfig{
-		name:     "abc.com_invalid-test",
-		endpoint: "abc.com",
-		timeout:  defaultDuration,
-	}
+	cfg := NewTCPChecker(
+		"abc.com_invalid-test",
+		"abc.com",
+		defaultDuration,
+	)
 	s := cfg.Test()
 
 	t.Log(s.Details)

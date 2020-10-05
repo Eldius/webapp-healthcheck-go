@@ -52,7 +52,7 @@ func (cfg *DBServiceConfig) Test() Status {
 	ctx, cancel := context.WithTimeout(ctx, cfg.Timeout())
 	defer cancel()
 	start := time.Now()
-	res := cfg.db.QueryRowContext(ctx, "select 1")
+	res := cfg.DB().QueryRowContext(ctx, "select 1")
 	n := -1
 	if err := res.Scan(&n); err != nil {
 		return Status{
