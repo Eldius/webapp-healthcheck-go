@@ -12,6 +12,8 @@ type ServiceType int
 const (
 	// ServiceTypeTCP is the TCP type checker
 	ServiceTypeTCP ServiceType = iota
+	// ServiceTypeDB is the database type checker
+	ServiceTypeDB ServiceType = iota
 	//ServiceTypeHTTP ServiceType = iota
 )
 
@@ -21,7 +23,6 @@ ServiceConfig defines the checker interface
 type ServiceConfig interface {
 	Name() string
 	Type() ServiceType
-	Endpoint() string
 	Timeout() time.Duration
 	Test() Status
 }

@@ -86,6 +86,14 @@ func (cfg *TCPServiceConfig) Test() Status {
 
 }
 
+func NewTCPChecker(name string, endpoint string, timeout time.Duration) ServiceConfig {
+	return &TCPServiceConfig{
+		name:     name,
+		endpoint: endpoint,
+		timeout:  timeout,
+	}
+}
+
 func parseHost(target string) (host string, err error) {
 	u, err := url.ParseRequestURI(target)
 	if err != nil {
