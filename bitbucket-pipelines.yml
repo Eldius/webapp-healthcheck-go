@@ -12,5 +12,5 @@ pipelines:
         script:
           - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.31.0
           - go get -v ./...
-          - go test -v -cover
+          - go test -v -cover ./...
           - golangci-lint run
