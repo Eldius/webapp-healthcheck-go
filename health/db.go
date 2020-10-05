@@ -65,7 +65,7 @@ func (cfg *DBServiceConfig) Test() Status {
 	}
 	return Status{
 		Name:   cfg.Name(),
-		Status: ServiceStatusNOK,
+		Status: ServiceStatusOK,
 		Details: map[string]string{
 			"time": time.Since(start).String(),
 		},
