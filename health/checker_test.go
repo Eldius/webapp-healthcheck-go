@@ -23,16 +23,16 @@ func TestCheckerEndpoint(t *testing.T) {
 	defer service1.Close()
 
 	h := BuildChecker([]ServiceConfig{
-		&TCPServiceConfig{
-			endpoint: "http://localhost:7777",
-			name:     "test-server0",
-			timeout:  defaultDuration,
-		},
-		&TCPServiceConfig{
-			endpoint: "http://localhost:8888",
-			name:     "test-server1",
-			timeout:  defaultDuration,
-		},
+		NewTCPChecker(
+			"test-server0",
+			"http://localhost:7777",
+			defaultDuration,
+		),
+		NewTCPChecker(
+			"test-server1",
+			"http://localhost:8888",
+			defaultDuration,
+		),
 	},
 		map[string]string{
 			"version":   "0.1.2",

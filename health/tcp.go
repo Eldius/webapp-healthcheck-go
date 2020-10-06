@@ -68,6 +68,7 @@ func (cfg *TCPServiceConfig) Test() Status {
 			Name:   cfg.Name(),
 			Status: ServiceStatusNOK,
 			Details: map[string]string{
+				"time": time.Since(start).String(),
 				"cause": err.Error(),
 			},
 		}
