@@ -24,7 +24,7 @@ func TestDBChecker(t *testing.T) {
 
 	s := chk.Test()
 	t.Log(s)
-	if s.Status != ServiceStatusOK {
+	if s.Status != CheckerStatusOK {
 		t.Errorf("Should return status 'OK', but returned '%s'", s.Status)
 	}
 }
@@ -42,7 +42,7 @@ func TestDBCheckerTimeout(t *testing.T) {
 
 	s := chk.Test()
 	t.Log(s)
-	if s.Status != ServiceStatusNOK {
+	if s.Status != CheckerStatusNOK {
 		t.Errorf("Should return status 'DOWN', but returned '%s'", s.Status)
 	}
 }

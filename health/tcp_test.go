@@ -58,7 +58,7 @@ func TestTcpTestOK(t *testing.T) {
 	s := cfg.Test()
 
 	t.Log(s.Details)
-	if s.Status != ServiceStatusOK {
+	if s.Status != CheckerStatusOK {
 		t.Errorf("Status should be UP, but was '%s'", s.Status)
 	}
 }
@@ -71,7 +71,7 @@ func TestTcpTestHostUnavailable(t *testing.T) {
 	)
 
 	s := cfg.Test()
-	if s.Status != ServiceStatusNOK {
+	if s.Status != CheckerStatusNOK {
 		t.Errorf("Status deve estar DOWN, mas esta '%s'", s.Status)
 	}
 }
@@ -85,7 +85,7 @@ func TestTcpTestTargetInvalido(t *testing.T) {
 	s := cfg.Test()
 
 	t.Log(s.Details)
-	if s.Status != ServiceStatusNOK {
+	if s.Status != CheckerStatusNOK {
 		t.Errorf("Status deve estar DOWN, mas esta '%s'", s.Status)
 	}
 }

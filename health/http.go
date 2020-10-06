@@ -11,7 +11,7 @@ type HTTPServiceConfig struct {
 	name     string
 	endpoint string
 	timeout  time.Duration
-	client http.Client
+	client *http.Client
 	status int
 }
 
@@ -23,10 +23,10 @@ func (cfg *HTTPServiceConfig) Name() string {
 }
 
 /*
-Type returns the test/service type (ServiceTypeTCP)
+Type returns the test/service type (CheckerTypeTCP)
 */
-func (cfg *HTTPServiceConfig) Type() ServiceType {
-	return ServiceTypeTCP
+func (cfg *HTTPServiceConfig) Type() CheckerType {
+	return CheckerTypeTCP
 }
 
 /*
@@ -48,12 +48,14 @@ Test returns the test/service status
 */
 func (cfg *HTTPServiceConfig) Test() Status {
 	start := time.Now()
+	cfg.client.Timeout = cfg.timeout
 
 	r, err := cfg.client.Get(cfg.Endpoint())
+
 	if err != nil {
 		return Status{
 			Name:   cfg.Name(),
-			Status: ServiceStatusNOK,
+			Status: CheckerStatusNOK,
 			Details: map[string]string{
 				"time": time.Since(start).String(),
 				"cause": err.Error(),
@@ -64,7 +66,7 @@ func (cfg *HTTPServiceConfig) Test() Status {
 	if r.StatusCode != cfg.status {
 		return Status{
 			Name:   cfg.Name(),
-			Status: ServiceStatusNOK,
+			Status: CheckerStatusNOK,
 			Details: map[string]string{
 				"time": time.Since(start).String(),
 				"status": strconv.Itoa(r.StatusCode),
@@ -76,7 +78,7 @@ func (cfg *HTTPServiceConfig) Test() Status {
 	if err != nil {
 		return Status{
 			Name:   cfg.Name(),
-			Status: ServiceStatusNOK,
+			Status: CheckerStatusNOK,
 			Details: map[string]string{
 				"time": time.Since(start).String(),
 				"status": strconv.Itoa(r.StatusCode),
@@ -86,7 +88,7 @@ func (cfg *HTTPServiceConfig) Test() Status {
 	}
 	return Status{
 		Name:   cfg.Name(),
-		Status: ServiceStatusOK,
+		Status: CheckerStatusOK,
 		Details: map[string]string{
 			"time": time.Since(start).String(),
 			"status": strconv.Itoa(r.StatusCode),
@@ -95,12 +97,12 @@ func (cfg *HTTPServiceConfig) Test() Status {
 	}
 }
 
-func NewHTTPChecker(name string, endpoint string, timeout time.Duration, status int) ServiceConfig {
+func NewHTTPChecker(name string, endpoint string, timeout time.Duration, status int) ServiceChecker {
 	return &HTTPServiceConfig{
 		name:     name,
 		endpoint: endpoint,
 		timeout:  timeout,
-		client: http.Client{
+		client: &http.Client{
 			Timeout: timeout,
 		},
 		status: status,

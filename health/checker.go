@@ -6,23 +6,23 @@ import (
 	"time"
 )
 
-//ServiceType service type definition
-type ServiceType int
+//CheckerType service type definition
+type CheckerType int
 
 const (
-	// ServiceTypeTCP is the TCP type checker
-	ServiceTypeTCP ServiceType = iota
-	// ServiceTypeDB is the database type checker
-	ServiceTypeDB ServiceType = iota
-	//ServiceTypeHTTP ServiceType = iota
+	// CheckerTypeTCP is the TCP type checker
+	CheckerTypeTCP CheckerType = iota
+	// CheckerTypeDB is the database type checker
+	CheckerTypeDB CheckerType = iota
+	//CheckerTypeHTTP CheckerType = iota
 )
 
 /*
-ServiceConfig defines the checker interface
+ServiceChecker defines the checker interface
 */
-type ServiceConfig interface {
+type ServiceChecker interface {
 	Name() string
-	Type() ServiceType
+	Type() CheckerType
 	Timeout() time.Duration
 	Test() Status
 }
@@ -30,10 +30,10 @@ type ServiceConfig interface {
 /*
 BuildChecker build the Checker responder
 */
-func BuildChecker(cfgList []ServiceConfig, info map[string]string) http.HandlerFunc {
+func BuildChecker(cfgList []ServiceChecker, info map[string]string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		h := checkHealth(cfgList, info)
-		if h.Status == ServiceStatusOK {
+		if h.Status == CheckerStatusOK {
 			w.WriteHeader(200)
 		} else {
 			w.WriteHeader(502)
@@ -43,7 +43,7 @@ func BuildChecker(cfgList []ServiceConfig, info map[string]string) http.HandlerF
 	}
 }
 
-func checkHealth(cfgList []ServiceConfig, info map[string]string) HealthStatus {
+func checkHealth(cfgList []ServiceChecker, info map[string]string) HealthStatus {
 	h := HealthStatus{
 		Info: info,
 	}

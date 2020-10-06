@@ -1,16 +1,16 @@
 package health
 
 /*
-ServiceStatus is the result of health check
+CheckerStatus is the result of health check
 possible values are 'UP' and 'DOWN'
 */
-type ServiceStatus string
+type CheckerStatus string
 
 const (
-	// ServiceStatusOK service is OK
-	ServiceStatusOK ServiceStatus = "UP"
-	// ServiceStatusNOK service is not OK
-	ServiceStatusNOK ServiceStatus = "DOWN"
+	// CheckerStatusOK service is OK
+	CheckerStatusOK CheckerStatus = "UP"
+	// CheckerStatusNOK service is not OK
+	CheckerStatusNOK CheckerStatus = "DOWN"
 )
 
 /*
@@ -18,7 +18,7 @@ Status is the check result for a service
 */
 type Status struct {
 	Name    string
-	Status  ServiceStatus
+	Status  CheckerStatus
 	Details map[string]string
 }
 
@@ -27,7 +27,7 @@ HealthStatus is the healthcheck status
 aggregate all service status
 */
 type HealthStatus struct {
-	Status   ServiceStatus
+	Status   CheckerStatus
 	Info     map[string]string
 	Services []Status
 }
@@ -36,10 +36,10 @@ type HealthStatus struct {
 Evaluate checks all services status and set health status
 */
 func (hs *HealthStatus) Evaluate() {
-	hs.Status = ServiceStatusOK
+	hs.Status = CheckerStatusOK
 	for _, s := range hs.Services {
-		if s.Status != ServiceStatusOK {
-			hs.Status = ServiceStatusNOK
+		if s.Status != CheckerStatusOK {
+			hs.Status = CheckerStatusNOK
 		}
 	}
 }

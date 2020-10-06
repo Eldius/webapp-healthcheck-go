@@ -22,7 +22,7 @@ func TestCheckerEndpoint(t *testing.T) {
 	service1 := startservice(8888, t)
 	defer service1.Close()
 
-	h := BuildChecker([]ServiceConfig{
+	h := BuildChecker([]ServiceChecker{
 		NewTCPChecker(
 			"test-server0",
 			"http://localhost:7777",
@@ -66,7 +66,7 @@ func TestCheckerEndpoint(t *testing.T) {
 		t.Errorf("Failed to unmarshal healthcheck response\n%s", err.Error())
 	}
 
-	if hs.Status != ServiceStatusOK {
+	if hs.Status != CheckerStatusOK {
 		t.Errorf("Status should be UP, but was %s", hs.Status)
 	}
 }
@@ -75,7 +75,7 @@ func TestCheckerEndpointFail(t *testing.T) {
 	service0 := startservice(7777, t)
 	defer service0.Close()
 
-	h := BuildChecker([]ServiceConfig{
+	h := BuildChecker([]ServiceChecker{
 		&TCPServiceConfig{
 			endpoint: "http://localhost:7777",
 			name:     "test-server0",
@@ -119,7 +119,7 @@ func TestCheckerEndpointFail(t *testing.T) {
 		t.Errorf("Failed to unmarshal healthcheck response\n%s", err.Error())
 	}
 
-	if hs.Status != ServiceStatusNOK {
+	if hs.Status != CheckerStatusNOK {
 		t.Errorf("Status should be DOWN, but was %s", hs.Status)
 	}
 }

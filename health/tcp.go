@@ -25,10 +25,10 @@ func (cfg *TCPServiceConfig) Name() string {
 }
 
 /*
-Type returns the test/service type (ServiceTypeTCP)
+Type returns the test/service type (CheckerTypeTCP)
 */
-func (cfg *TCPServiceConfig) Type() ServiceType {
-	return ServiceTypeTCP
+func (cfg *TCPServiceConfig) Type() CheckerType {
+	return CheckerTypeTCP
 }
 
 /*
@@ -53,7 +53,7 @@ func (cfg *TCPServiceConfig) Test() Status {
 	if err != nil {
 		return Status{
 			Name:   "cartao-adesao",
-			Status: ServiceStatusNOK,
+			Status: CheckerStatusNOK,
 			Details: map[string]string{
 				"error": err.Error(),
 			},
@@ -66,7 +66,7 @@ func (cfg *TCPServiceConfig) Test() Status {
 		log.Println("Something wrong: ", err)
 		return Status{
 			Name:   cfg.Name(),
-			Status: ServiceStatusNOK,
+			Status: CheckerStatusNOK,
 			Details: map[string]string{
 				"time": time.Since(start).String(),
 				"cause": err.Error(),
@@ -79,7 +79,7 @@ func (cfg *TCPServiceConfig) Test() Status {
 	}()
 	return Status{
 		Name:   cfg.Name(),
-		Status: ServiceStatusOK,
+		Status: CheckerStatusOK,
 		Details: map[string]string{
 			"time": time.Since(start).String(),
 		},
@@ -87,7 +87,7 @@ func (cfg *TCPServiceConfig) Test() Status {
 
 }
 
-func NewTCPChecker(name string, endpoint string, timeout time.Duration) ServiceConfig {
+func NewTCPChecker(name string, endpoint string, timeout time.Duration) ServiceChecker {
 	return &TCPServiceConfig{
 		name:     name,
 		endpoint: endpoint,

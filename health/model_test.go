@@ -7,15 +7,15 @@ func TestHealthStatusOK(t *testing.T) {
 		Services: []Status{
 			{
 				Name:   "service01",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 			{
 				Name:   "service02",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 			{
 				Name:   "service03",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 		},
 	}
@@ -32,15 +32,15 @@ func TestHealthStatusNOK0(t *testing.T) {
 		Services: []Status{
 			{
 				Name:   "service01",
-				Status: ServiceStatusNOK,
+				Status: CheckerStatusNOK,
 			},
 			{
 				Name:   "service02",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 			{
 				Name:   "service03",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 		},
 	}
@@ -57,15 +57,15 @@ func TestHealthStatusNOK1(t *testing.T) {
 		Services: []Status{
 			{
 				Name:   "service01",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 			{
 				Name:   "service02",
-				Status: ServiceStatusNOK,
+				Status: CheckerStatusNOK,
 			},
 			{
 				Name:   "service03",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 		},
 	}
@@ -82,15 +82,15 @@ func TestHealthStatusNOK2(t *testing.T) {
 		Services: []Status{
 			{
 				Name:   "service01",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 			{
 				Name:   "service02",
-				Status: ServiceStatusOK,
+				Status: CheckerStatusOK,
 			},
 			{
 				Name:   "service03",
-				Status: ServiceStatusNOK,
+				Status: CheckerStatusNOK,
 			},
 		},
 	}
@@ -107,15 +107,15 @@ func TestHealthStatusNOK3(t *testing.T) {
 		Services: []Status{
 			{
 				Name:   "service01",
-				Status: ServiceStatusNOK,
+				Status: CheckerStatusNOK,
 			},
 			{
 				Name:   "service02",
-				Status: ServiceStatusNOK,
+				Status: CheckerStatusNOK,
 			},
 			{
 				Name:   "service03",
-				Status: ServiceStatusNOK,
+				Status: CheckerStatusNOK,
 			},
 		},
 	}
