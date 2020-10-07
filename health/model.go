@@ -17,9 +17,9 @@ const (
 Status is the check result for a service
 */
 type Status struct {
-	Name    string
-	Status  CheckerStatus
-	Details map[string]string
+	Name    string `json:"name"`
+	Status  CheckerStatus `json:"status"`
+	Details map[string]string `json:"details"`
 }
 
 /*
@@ -27,9 +27,9 @@ HealthStatus is the healthcheck status
 aggregate all service status
 */
 type HealthStatus struct {
-	Status   CheckerStatus
-	Info     map[string]string
-	Services []Status
+	Status   CheckerStatus `json:"status"`
+	Info     map[string]string `json:"info"`
+	Services []Status `json:"services"`
 }
 
 /*
