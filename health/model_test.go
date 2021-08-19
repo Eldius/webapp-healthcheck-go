@@ -2,9 +2,9 @@ package health
 
 import "testing"
 
-func TestHealthStatusOK(t *testing.T) {
-	h := HealthStatus{
-		Services: []Status{
+func TestStatusOK(t *testing.T) {
+	h := Status{
+		Services: []ServiceStatus{
 			{
 				Name:   "service01",
 				Status: CheckerStatusOK,
@@ -27,9 +27,9 @@ func TestHealthStatusOK(t *testing.T) {
 	}
 }
 
-func TestHealthStatusNOK0(t *testing.T) {
-	h := HealthStatus{
-		Services: []Status{
+func TestStatusNOK0(t *testing.T) {
+	h := Status{
+		Services: []ServiceStatus{
 			{
 				Name:   "service01",
 				Status: CheckerStatusNOK,
@@ -52,9 +52,9 @@ func TestHealthStatusNOK0(t *testing.T) {
 	}
 }
 
-func TestHealthStatusNOK1(t *testing.T) {
-	h := HealthStatus{
-		Services: []Status{
+func TestStatusNOK1(t *testing.T) {
+	h := Status{
+		Services: []ServiceStatus{
 			{
 				Name:   "service01",
 				Status: CheckerStatusOK,
@@ -77,9 +77,9 @@ func TestHealthStatusNOK1(t *testing.T) {
 	}
 }
 
-func TestHealthStatusNOK2(t *testing.T) {
-	h := HealthStatus{
-		Services: []Status{
+func TestStatusNOK2(t *testing.T) {
+	h := Status{
+		Services: []ServiceStatus{
 			{
 				Name:   "service01",
 				Status: CheckerStatusOK,
@@ -102,9 +102,9 @@ func TestHealthStatusNOK2(t *testing.T) {
 	}
 }
 
-func TestHealthStatusNOK3(t *testing.T) {
-	h := HealthStatus{
-		Services: []Status{
+func TestStatusNOK3(t *testing.T) {
+	h := Status{
+		Services: []ServiceStatus{
 			{
 				Name:   "service01",
 				Status: CheckerStatusNOK,

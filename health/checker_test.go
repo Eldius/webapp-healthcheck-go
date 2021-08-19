@@ -60,7 +60,7 @@ func TestCheckerEndpoint(t *testing.T) {
 		t.Errorf("Failed to read response body.\n%s\n", err.Error())
 	}
 	t.Logf("---\nresponse code: %s\nresponse body:\n%s\n---", r.Status, string(body))
-	var hs HealthStatus
+	var hs Status
 	err = json.Unmarshal(body, &hs)
 	if err != nil {
 		t.Errorf("Failed to unmarshal healthcheck response\n%s", err.Error())
@@ -113,7 +113,7 @@ func TestCheckerEndpointFail(t *testing.T) {
 		t.Errorf("Failed to read response body.\n%s\n", err.Error())
 	}
 	t.Logf("---\nresponse code: %s\nresponse body:\n%s\n---", r.Status, string(body))
-	var hs HealthStatus
+	var hs Status
 	err = json.Unmarshal(body, &hs)
 	if err != nil {
 		t.Errorf("Failed to unmarshal healthcheck response\n%s", err.Error())

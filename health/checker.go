@@ -24,14 +24,14 @@ type ServiceChecker interface {
 	Name() string
 	Type() CheckerType
 	Timeout() time.Duration
-	Test() Status
+	Test() ServiceStatus
 }
 
 /*
 BuildChecker build the Checker responder
 */
 func BuildChecker(cfgList []ServiceChecker, info map[string]string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		h := checkHealth(cfgList, info)
 		if h.Status == CheckerStatusOK {
 			w.WriteHeader(200)
@@ -43,8 +43,8 @@ func BuildChecker(cfgList []ServiceChecker, info map[string]string) http.Handler
 	}
 }
 
-func checkHealth(cfgList []ServiceChecker, info map[string]string) HealthStatus {
-	h := HealthStatus{
+func checkHealth(cfgList []ServiceChecker, info map[string]string) Status {
+	h := Status{
 		Info: info,
 	}
 

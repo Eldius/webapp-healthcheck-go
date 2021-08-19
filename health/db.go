@@ -7,7 +7,7 @@ import (
 )
 
 /*
-TCPServiceConfig is the checker config type for TCP checks
+DBServiceChecker is the checker config type for database
 */
 type DBServiceChecker struct {
 	name    string
@@ -24,14 +24,14 @@ func (cfg *DBServiceChecker) Name() string {
 }
 
 /*
-Type returns the test/service type (CheckerTypeTCP)
+Type returns the test/service type (CheckerTypeDB)
 */
 func (cfg *DBServiceChecker) Type() CheckerType {
 	return CheckerTypeDB
 }
 
 /*
-Endpoint returns the test/service endpoint
+DB returns the DB
 */
 func (cfg *DBServiceChecker) DB() *sql.DB {
 	return cfg.db
@@ -47,7 +47,7 @@ func (cfg *DBServiceChecker) Timeout() time.Duration {
 /*
 Test returns the test/service status
 */
-func (cfg *DBServiceChecker) Test() Status {
+func (cfg *DBServiceChecker) Test() ServiceStatus {
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, cfg.Timeout())
 	defer cancel()
@@ -55,7 +55,7 @@ func (cfg *DBServiceChecker) Test() Status {
 	res := cfg.DB().QueryRowContext(ctx, "select 1")
 	n := -1
 	if err := res.Scan(&n); err != nil {
-		return Status{
+		return ServiceStatus{
 			Name:   cfg.Name(),
 			Status: CheckerStatusNOK,
 			Details: map[string]string{
@@ -63,7 +63,7 @@ func (cfg *DBServiceChecker) Test() Status {
 			},
 		}
 	}
-	return Status{
+	return ServiceStatus{
 		Name:   cfg.Name(),
 		Status: CheckerStatusOK,
 		Details: map[string]string{
@@ -72,10 +72,16 @@ func (cfg *DBServiceChecker) Test() Status {
 	}
 }
 
+/*
+NewDBChecker returns a new DB checker using the default query (`select 1`)
+*/
 func NewDBChecker(name string, db *sql.DB, timeout time.Duration) ServiceChecker {
 	return NewDBCheckerCustomQuery(name, db, timeout, "select 1")
 }
 
+/*
+NewDBCheckerCustomQuery returns a new DB checker using a query passed by parameter
+*/
 func NewDBCheckerCustomQuery(name string, db *sql.DB, timeout time.Duration, query string) ServiceChecker {
 	return &DBServiceChecker{
 		name:    name,

@@ -14,28 +14,28 @@ const (
 )
 
 /*
-Status is the check result for a service
+ServiceStatus is the check result for a service
 */
-type Status struct {
-	Name    string `json:"name"`
-	Status  CheckerStatus `json:"status"`
+type ServiceStatus struct {
+	Name    string            `json:"name"`
+	Status  CheckerStatus     `json:"status"`
 	Details map[string]string `json:"details"`
 }
 
 /*
-HealthStatus is the healthcheck status
+Status is the healthcheck status
 aggregate all service status
 */
-type HealthStatus struct {
-	Status   CheckerStatus `json:"status"`
+type Status struct {
+	Status   CheckerStatus     `json:"status"`
 	Info     map[string]string `json:"info"`
-	Services []Status `json:"services"`
+	Services []ServiceStatus   `json:"services"`
 }
 
 /*
 Evaluate checks all services status and set health status
 */
-func (hs *HealthStatus) Evaluate() {
+func (hs *Status) Evaluate() {
 	hs.Status = CheckerStatusOK
 	for _, s := range hs.Services {
 		if s.Status != CheckerStatusOK {

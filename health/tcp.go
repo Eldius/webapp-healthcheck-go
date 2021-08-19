@@ -48,10 +48,10 @@ func (cfg *TCPServiceConfig) Timeout() time.Duration {
 /*
 Test returns the test/service status
 */
-func (cfg *TCPServiceConfig) Test() Status {
+func (cfg *TCPServiceConfig) Test() ServiceStatus {
 	url, err := parseHost(cfg.Endpoint())
 	if err != nil {
-		return Status{
+		return ServiceStatus{
 			Name:   "cartao-adesao",
 			Status: CheckerStatusNOK,
 			Details: map[string]string{
@@ -64,11 +64,11 @@ func (cfg *TCPServiceConfig) Test() Status {
 	conn, err := net.DialTimeout("tcp", url, cfg.Timeout())
 	if err != nil {
 		log.Println("Something wrong: ", err)
-		return Status{
+		return ServiceStatus{
 			Name:   cfg.Name(),
 			Status: CheckerStatusNOK,
 			Details: map[string]string{
-				"time": time.Since(start).String(),
+				"time":  time.Since(start).String(),
 				"cause": err.Error(),
 			},
 		}
@@ -77,7 +77,7 @@ func (cfg *TCPServiceConfig) Test() Status {
 		conn.Close()
 		log.Println("Connection closed")
 	}()
-	return Status{
+	return ServiceStatus{
 		Name:   cfg.Name(),
 		Status: CheckerStatusOK,
 		Details: map[string]string{
@@ -87,6 +87,9 @@ func (cfg *TCPServiceConfig) Test() Status {
 
 }
 
+/*
+NewTCPChecker returns a TCP connection checker
+*/
 func NewTCPChecker(name string, endpoint string, timeout time.Duration) ServiceChecker {
 	return &TCPServiceConfig{
 		name:     name,

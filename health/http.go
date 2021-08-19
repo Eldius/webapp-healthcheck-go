@@ -7,12 +7,15 @@ import (
 	"time"
 )
 
+/*
+HTTPServiceConfig is the configuration to be used with HTTP connection checker
+*/
 type HTTPServiceConfig struct {
 	name     string
 	endpoint string
 	timeout  time.Duration
-	client *http.Client
-	status int
+	client   *http.Client
+	status   int
 }
 
 /*
@@ -46,29 +49,29 @@ func (cfg *HTTPServiceConfig) Timeout() time.Duration {
 /*
 Test returns the test/service status
 */
-func (cfg *HTTPServiceConfig) Test() Status {
+func (cfg *HTTPServiceConfig) Test() ServiceStatus {
 	start := time.Now()
 	cfg.client.Timeout = cfg.timeout
 
 	r, err := cfg.client.Get(cfg.Endpoint())
 
 	if err != nil {
-		return Status{
+		return ServiceStatus{
 			Name:   cfg.Name(),
 			Status: CheckerStatusNOK,
 			Details: map[string]string{
-				"time": time.Since(start).String(),
+				"time":  time.Since(start).String(),
 				"cause": err.Error(),
 			},
 		}
 	}
 
 	if r.StatusCode != cfg.status {
-		return Status{
+		return ServiceStatus{
 			Name:   cfg.Name(),
 			Status: CheckerStatusNOK,
 			Details: map[string]string{
-				"time": time.Since(start).String(),
+				"time":   time.Since(start).String(),
 				"status": strconv.Itoa(r.StatusCode),
 			},
 		}
@@ -76,27 +79,30 @@ func (cfg *HTTPServiceConfig) Test() Status {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return Status{
+		return ServiceStatus{
 			Name:   cfg.Name(),
 			Status: CheckerStatusNOK,
 			Details: map[string]string{
-				"time": time.Since(start).String(),
+				"time":   time.Since(start).String(),
 				"status": strconv.Itoa(r.StatusCode),
-				"cause": err.Error(),
+				"cause":  err.Error(),
 			},
 		}
 	}
-	return Status{
+	return ServiceStatus{
 		Name:   cfg.Name(),
 		Status: CheckerStatusOK,
 		Details: map[string]string{
-			"time": time.Since(start).String(),
-			"status": strconv.Itoa(r.StatusCode),
+			"time":     time.Since(start).String(),
+			"status":   strconv.Itoa(r.StatusCode),
 			"response": string(body),
 		},
 	}
 }
 
+/*
+NewHTTPChecker returns a new HTTP connection checker
+*/
 func NewHTTPChecker(name string, endpoint string, timeout time.Duration, status int) ServiceChecker {
 	return &HTTPServiceConfig{
 		name:     name,
