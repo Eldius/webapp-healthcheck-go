@@ -48,6 +48,7 @@ func checkHealth(cfgList []ServiceChecker, info map[string]string) Status {
 		Info: info,
 	}
 
+	h.Services = make([]ServiceStatus, 0)
 	for _, c := range cfgList {
 		h.Services = append(h.Services, c.Test())
 	}

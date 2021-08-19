@@ -15,7 +15,55 @@ const (
 	defaultDuration = time.Duration(1 * time.Second)
 )
 
+func TestCheckerWithEmptyServices(t *testing.T) {
+
+	h := BuildChecker([]ServiceChecker{},
+		map[string]string{
+			"version":   "0.1.2",
+			"buildDate": "2020-10-04 23:21:00Z",
+		},
+	)
+
+	s := httptest.NewServer(h)
+	defer s.Close()
+
+	c := http.DefaultClient
+
+	r, err := c.Get(s.URL)
+	if err != nil {
+		t.Errorf("Failed to make get request to test server\n%s\n", err.Error())
+	}
+	defer r.Body.Close()
+
+	if r.StatusCode != 200 {
+		t.Errorf("Status code must be 200, but was %d", r.StatusCode)
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		t.Errorf("Failed to read response body.\n%s\n", err.Error())
+	}
+	t.Logf("---\nresponse code: %s\nresponse body:\n%s\n---", r.Status, string(body))
+	var hs Status
+	err = json.Unmarshal(body, &hs)
+	if err != nil {
+		t.Errorf("Failed to unmarshal healthcheck response\n%s", err.Error())
+	}
+
+	if hs.Status != CheckerStatusOK {
+		t.Errorf("Status should be UP, but was %s", hs.Status)
+	}
+
+	if hs.Services == nil {
+		t.Error("Services list should be an empty list, but was nil")
+	}
+
+	if len(hs.Services) != 0 {
+		t.Errorf("Services list should be an empty list, but it has %d elements", len(hs.Services))
+	}
+}
 func TestCheckerEndpoint(t *testing.T) {
+
 	service0 := startservice(7777, t)
 	defer service0.Close()
 
